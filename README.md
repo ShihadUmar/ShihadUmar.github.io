@@ -1,5 +1,6 @@
 # Snake-Game
 [mobile friendly]
+
 use Arrow keys (wasd) in pc.
 click in mobile.
 
