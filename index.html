@@ -280,7 +280,7 @@
                     }
                 }
                 if(event.key == "p"){
-                    if(pausex && !stopy){
+                    if(pausex && !stopy && !stopyx){
                         pausex = false;
                         if(pause){     
                             $(".text-").hide(1000);
@@ -313,7 +313,7 @@
                 }
             });
             $("#pause").click(function(){
-                if(pausex && !stopy){
+                if(pausex && !stopy && !stopyx){
                     pausex = false;
                     if(pause){     
                         $(".text-").hide(1000);
@@ -377,6 +377,7 @@
                     }
                 }
             });
+            $("script").remove();
         });
     </script>
 </body>
