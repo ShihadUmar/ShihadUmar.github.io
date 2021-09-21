@@ -1,5 +1,6 @@
-<p align="center">
+<div align="center">
 <h1>Snake-Game</h1>
+<p>
 <h3>mobile friendly</h3><br>
 <h4>use Arrow keys (wasd) in pc.<br>
 swipe in mobile.</h4><br>
@@ -8,3 +9,4 @@ swipe in mobile.</h4><br>
 <a href="https://shihadumar.github.io/">play online</a><br>
 <h4>jquery</h4>
 </p>
+</div>
