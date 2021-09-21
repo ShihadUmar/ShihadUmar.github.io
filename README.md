@@ -1,5 +1,5 @@
 <div align="center">
-<h1>Snake-Game</h1>
+<h1>Snake-Game</h1><hr>
 <h3>mobile friendly</h3><hr>
 <h4>use Arrow keys (wasd) in pc.<br>
 swipe in mobile.</h4><hr>
