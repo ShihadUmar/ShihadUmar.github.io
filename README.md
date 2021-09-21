@@ -8,6 +8,7 @@ swipe in mobile.
 
 I used svg tag to create graphics.
 
-[play online](https://shihadumar.github.io/)
+[center][play online](https://shihadumar.github.io/)
 
----------------jquery-------------------
+---------------jquery--------------------
+<a href="a">a</a>
