@@ -2,7 +2,7 @@
 [mobile friendly]
 
 use Arrow keys (wasd) in pc.
-click in mobile.
+swipe in mobile.
 
 I used svg tag to create graphics.
 
