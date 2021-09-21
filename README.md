@@ -11,4 +11,3 @@ I used svg tag to create graphics.
 [center][play online](https://shihadumar.github.io/)
 
 ---------------jquery--------------------
-<a href="a">a</a>
