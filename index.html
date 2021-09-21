@@ -279,6 +279,38 @@
                         }
                     }
                 }
+                if(event.key == "p"){
+                    if(pausex && !stopy){
+                        pausex = false;
+                        if(pause){     
+                            $(".text-").hide(1000);
+                            $(".play").hide(1000);
+                            $(".pause").show(1000);
+                            $(".all").show(1000);  
+                            setTimeout(() => {
+                                $("#text1").text("Game Over.");
+                                $("#text2").text("Click to Restart.");
+                                $("#text1").attr("x","14");
+                                $("#text2").attr("x","10.5");
+                                pause = false;
+                                pausex = true;                          
+                            }, 1000);
+                        }else{
+                            $(".play").show(1000);
+                            $(".pause").hide(1000);
+                            $("#text1").text("Game Paused.");
+                            $("#text2").text("Click play Continue.");
+                            $("#text1").attr("x","13");
+                            $("#text2").attr("x","9");
+                            $(".all").hide(1000);
+                            $(".text-").show(1000);
+                            setTimeout(() => {
+                                pausex = true;
+                            }, 1000);
+                            pause = true;
+                        }
+                    }
+                }
             });
             $("#pause").click(function(){
                 if(pausex && !stopy){
