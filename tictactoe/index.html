@@ -216,9 +216,12 @@
         </g>
     </svg>
     <script>
-        $('body').show();
         $('.X, .O, .-lines- polyline,  .X-win,  .O-win, .no-win').hide();
+        if (!(/Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor))) {
+            $('animate').remove();
+        }
         $(function () {
+            $('body').removeAttr('style');
             let gameArray,turn,xScore,oScore,click,banner,restartBtn,draw;
             const winPositions = ['112131','122232','132333','111213','212223','313233','112233','312213']
             banner = false;
