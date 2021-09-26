@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="../lib/jquery.min.js"></script>
+    <style>
+        @font-face {
+            font-family: 'Gotham Rounded';
+            src: local('Gotham Rounded'), url('../fonts/Gotham\ Rounded\ Medium.woff') format('woff');
+        }
+        html, body {
+            height: 100%;
+            width: 100%;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #eee;
+        }
+        #game {
+            position: relative;
+            width: 100vw;
+            height: 133.333333333vw;
+        }
+        @media (min-aspect-ratio: 3/4) {
+            #game {
+                height: 100vh;
+                width: 75vh;
+            }
+        }
+        .line {
+            stroke-linecap: round;
+            fill: none;
+            stroke: #223;
+            stroke-width: 0.075;
+        }
+        .X polyline, .X {
+            stroke: #322;
+        }
+        .O circle, .O {
+            stroke: #232;
+        }
+        .bg {
+            fill: #eee;
+        }
+        .font {
+            color: #223;
+            font-family: 'Gotham Rounded', sans-serif;
+            font-size: 0.2px;
+        }
+    </style>
+</head>
+<body>
+    <svg id="game" viewBox="-0.1 -0.1 3.2 4.2" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <g class="text">
+            <text x="0"  y="0.4" class="font" fill="#433">X: <tspan id="X-">0</tspan></text>
+            <text x="0"  y="0.6" class="font" fill="#343">O: <tspan id="O-">0</tspan></text>
+            <text x="0"  y="0.2" class="font" fill="#334">Draw: <tspan id="no-">0</tspan></text>
+            <text x="3"  y="0.2" class="font" direction="rtl">Turn: <tspan id="turn-">X</tspan></text>
+            <text x="3"  y="0.4" class="font" direction="rtl" text-decoration="underline" fill="#232" underline-thickness="0.02px">Restart</text>
+            <polygon id="restart" points="2.25 0.25 3 0.25 3 0.45 2.25 0.45" fill-opacity="0"/>
+        </g>
+        <g class="lines">
+            <polyline points="1 1 1 1" class="line">
+                <animate attributeName="points" dur="750ms" repeatCount="1" from="1,1" to="1,4" fill="freeze"/>
+            </polyline>
+            <polyline points="2 4 2 4" class="line">
+                <animate attributeName="points" dur="750ms" repeatCount="1" from="2,4" to="2,1" fill="freeze"/>
+            </polyline>
+            <polyline points="0 3 0 3" class="line">
+                <animate attributeName="points" dur="750ms" repeatCount="1" from="0,3" to="3,3"  fill="freeze"/>
+            </polyline>
+            <polyline points="3 2 3 2" class="line">
+                <animate attributeName="points" dur="750ms" repeatCount="1" from="3,2" to="0,2"  fill="freeze"/>
+            </polyline>    
+        </g>
+        <g class="box-group">
+            <g id="box-11">
+                <g class="X" id="X11">
+                    <polyline points="0.2 1.2 0.8 1.8" class="line"/>
+                    <polyline points="0.8 1.2 0.2 1.8" class="line"/>
+                </g>
+                <g class="O" id="O11">
+                    <circle cx="0.5" cy="1.5" r="0.3" class="line"/>
+                </g>
+                <g class="hitbox">
+                    <polygon id="hitbox-11" points="0 1 1 1 1 2 0 2" fill-opacity="0"/>
+                </g>
+            </g>
+            <g id="box-12">
+                <g class="X" id="X12">
+                    <polyline points="1.2 1.2 1.8 1.8" class="line"/>
+                    <polyline points="1.8 1.2 1.2 1.8" class="line"/>
+                </g>
+                <g class="O" id="O12">
+                    <circle cx="1.5" cy="1.5" r="0.3" class="line"/>
+                </g>
+                <g class="hitbox">
+                    <polygon id="hitbox-12" points="1 1 2 1 2 2 1 2" fill-opacity="0"/>
+                </g>
+            </g>
+            <g id="box-13">
+                <g class="X" id="X13">
+                    <polyline points="2.2 1.2 2.8 1.8" class="line"/>
+                    <polyline points="2.8 1.2 2.2 1.8" class="line"/>
+                </g>
+                <g class="O" id="O13">
+                    <circle cx="2.5" cy="1.5" r="0.3" class="line"/>
+                </g>
+                <g class="hitbox">
+                    <polygon id="hitbox-13" points="2 1 3 1 3 2 2 2" fill-opacity="0"/>
+                </g>
+            </g>
+            <g id="box-21">
+                <g class="X" id="X21">
+                    <polyline points="0.2 2.2 0.8 2.8" class="line"/>
+                    <polyline points="0.8 2.2 0.2 2.8" class="line"/>
+                </g>
+                <g class="O" id="O21">
+                    <circle cx="0.5" cy="2.5" r="0.3" class="line"/>
+                </g>
+                <g class="hitbox">
+                    <polygon id="hitbox-21" points="0 2 1 2 1 3 0 3" fill-opacity="0"/>
+                </g>
+            </g>
+            <g id="box-22">
+                <g class="X" id="X22">
+                    <polyline points="1.2 2.2 1.8 2.8" class="line"/>
+                    <polyline points="1.8 2.2 1.2 2.8" class="line"/>
+                </g>
+                <g class="O" id="O22">
+                    <circle cx="1.5" cy="2.5" r="0.3" class="line"/>
+                </g>
+                <g class="hitbox">
+                    <polygon id="hitbox-22" points="1 2 2 2 2 3 1 3" fill-opacity="0"/>
+                </g>
+            </g>
+            <g id="box-23">
+                <g class="X" id="X23">
+                    <polyline points="2.2 2.2 2.8 2.8" class="line"/>
+                    <polyline points="2.8 2.2 2.2 2.8" class="line"/>
+                </g>
+                <g class="O" id="O23">
+                    <circle cx="2.5" cy="2.5" r="0.3" class="line"/>
+                </g>
+                <g class="hitbox">
+                    <polygon id="hitbox-23" points="2 2 3 2 3 3 2 3" fill-opacity="0"/>
+                </g>
+            </g>
+            <g id="box-31">
+                <g class="X" id="X31">
+                    <polyline points="0.2 3.2 0.8 3.8" class="line"/>
+                    <polyline points="0.8 3.2 0.2 3.8" class="line"/>
+                </g>
+                <g class="O" id="O31">
+                    <circle cx="0.5" cy="3.5" r="0.3" class="line"/>
+                </g>
+                <g class="hitbox">
+                    <polygon id="hitbox-31" points="0 3 1 3 1 4 0 4" fill-opacity="0"/>
+                </g>
+            </g>
+            <g id="box-32">
+                <g class="X" id="X32">
+                    <polyline points="1.2 3.2 1.8 3.8" class="line"/>
+                    <polyline points="1.8 3.2 1.2 3.8" class="line"/>
+                </g>
+                <g class="O" id="O32">
+                    <circle cx="1.5" cy="3.5" r="0.3" class="line"/>
+                </g>
+                <g class="hitbox">
+                    <polygon id="hitbox-32" points="1 3 2 3 2 4 1 4" fill-opacity="0"/>
+                </g>
+            </g>
+            <g id="box-33">
+                <g class="X" id="X33">
+                    <polyline points="2.2 3.2 2.8 3.8" class="line"/>
+                    <polyline points="2.8 3.2 2.2 3.8" class="line"/>
+                </g>
+                <g class="O" id="O33">
+                    <circle cx="2.5" cy="3.5" r="0.3" class="line"/>
+                </g>
+                <g class="hitbox">
+                    <polygon id="hitbox-33" points="2 3 3 3 3 4 2 4" fill-opacity="0"/>
+                </g>
+            </g>
+        </g>
+        <g class="-lines-">
+            <polyline id="line-7" points="0.2 1.2 2.8 3.8" class="line"></polyline>
+            <polyline id="line-8" points="2.8 1.2 0.2 3.8" class="line"></polyline>
+            <polyline id="line-1" points="0.5 1.2 0.5 3.8" class="line"></polyline>
+            <polyline id="line-2" points="1.5 1.2 1.5 3.8" class="line"></polyline>
+            <polyline id="line-3" points="2.5 1.2 2.5 3.8" class="line"></polyline>
+            <polyline id="line-4" points="0.2 1.5 2.8 1.5" class="line"></polyline>
+            <polyline id="line-5" points="0.2 2.5 2.8 2.5" class="line"></polyline>
+            <polyline id="line-6" points="0.2 3.5 2.8 3.5" class="line"></polyline>
+        </g>
+        <g class="banner">
+            <polygon  class="bg X-win" points="-0.2 -0.2 3.2 -0.2 3.2 4.2 -0.2 4.2"/>
+            <polygon  class="bg O-win" points="-0.2 -0.2 3.2 -0.2 3.2 4.2 -0.2 4.2"/>
+            <polygon  class="bg no-win" points="-0.2 -0.2 3.2 -0.2 3.2 4.2 -0.2 4.2"/>
+            <text x="1.5"  y="2" class="font X-win" style="font-size: 0.5px; fill: #322;" text-anchor="middle">X win.</text>
+            <text x="1.5"  y="2" class="font O-win" style="font-size: 0.5px; fill: #232;" text-anchor="middle">O win.</text>
+            <text x="1.5"  y="2" class="font no-win" style="font-size: 0.5px; fill: #223;" text-anchor="middle">Draw.</text>
+        </g>
+    </svg>
+    <script>
+        $('.X, .O, .-lines- polyline,  .X-win,  .O-win, .no-win').hide();
+        $(function () {
+            let gameArray,turn,xScore,oScore,click,banner,restartBtn,draw;
+            const winPositions = ['112131','122232','132333','111213','212223','313233','112233','312213']
+            banner = false;
+            restartBtn = false;
+            setTimeout(() => {
+                restartBtn = true;                
+            }, 1000);
+            xScore = 0;
+            oScore = 0;
+            draw = 0;
+            banner = false;
+            turn = 'X';
+            click =  true;
+            gameArray = [[null,null,null],[null,null,null],[null,null,null]];
+            function restart () {
+                turn = 'X';
+                $('#turn-').text(turn);
+                gameArray = [[null,null,null],[null,null,null],[null,null,null]];
+                $('.X, .O, .-lines- polyline,  .X-win,  .O-win, .no-win').hide(500);
+                setTimeout(() => {
+                    restartBtn = true;                
+                }, 1000);
+                document.querySelectorAll('animate').forEach(function (element) {
+                    element.beginElement();
+                });
+                click = true
+            }
+            function refresh () {
+                for (const x in gameArray) {
+                    for (const y in gameArray[x]) {
+                        if (gameArray[x][y] == 'X') {
+                            $(`.X${x+1}${y+1}`).show();
+                        } else if (gameArray[x][y] == 'O') {
+                            $(`.O${x+1}${y+1}`).show();
+                        } else {
+                            $(`#X${x+1}${y+1}, #O${x+1}${y+1}`).hide();
+                        }
+                    }   
+                }
+                checkWin();
+            }
+            function checkWin(){
+                for (let x = 0; x < 8; x++) {
+                    if (gameArray[Number(winPositions[x][0])-1][Number(winPositions[x][1])-1]=='X'&&gameArray[Number(winPositions[x][2])-1][Number(winPositions[x][3])-1]=='X'&&gameArray[Number(winPositions[x][4])-1][Number(winPositions[x][5])-1]=='X') {
+                        $(`#line-${x+1}`).addClass('X');
+                        $(`#line-${x+1}`).removeClass('O');                   
+                        $(`#line-${x+1}`).show(500);
+                        xScore++;
+                        $('#X-').text(xScore);
+                        setTimeout(() => {
+                            $('.X-win').show(500);
+                        }, 1500);
+                        setTimeout(() => {
+                            banner = true;
+                            $('.X, .O').hide();
+                        }, 2000);
+                        return;
+                    } else if (gameArray[Number(winPositions[x][0])-1][Number(winPositions[x][1])-1]=='O'&&gameArray[Number(winPositions[x][2])-1][Number(winPositions[x][3])-1]=='O'&&gameArray[Number(winPositions[x][4])-1][Number(winPositions[x][5])-1]=='O') {
+                        $(`#line-${x+1}`).addClass('O');
+                        $(`#line-${x+1}`).removeClass('X');                    
+                        $(`#line-${x+1}`).show(500);
+                        oScore++;
+                        $('#O-').text(oScore);
+                        setTimeout(() => {
+                            $('.O-win').show(500);
+                        }, 1500);
+                        setTimeout(() => {
+                            banner = true;
+                            $('.X, .O').hide();
+                        }, 2000);
+                        return;
+                    }
+                }
+                for (const x in gameArray) {
+                    for (const y in gameArray[x]) {
+                        if (gameArray[x][y]==null) {                            
+                            click = true;
+                            restartBtn = true;
+                            return;
+                        }
+                    }
+                }
+                $('.no-win').show(500);
+                draw++;
+                $('#no-').text(draw);
+                setTimeout(() => {
+                    banner = true;
+                    $('.X, .O').hide();
+                }, 1000);
+            }
+            $('.hitbox polygon').click(function () {
+                if (click) {
+                    click = false;
+                    restartBtn = false;
+                    const id = $(this).attr('id').split('-')[1];
+                    if (gameArray[Number(id[0])-1][Number(id[1])-1]!=null) {
+                        click = true;
+                        return;
+                    }
+                    $(`#${turn}${id}`).show(500);
+                    gameArray[Number(id[0])-1][Number(id[1])-1] = turn;
+                    turn = (turn == 'X'? 'O': 'X');
+                    $('#turn-').text(turn);
+                    setTimeout(() => {
+                        refresh();
+                    }, 500);
+                }
+            });
+            $('body').click(function () {
+                if (banner) {
+                    banner = false;
+                    restartBtn = false;
+                    restart();
+                }
+            });
+            $('#restart').click(function () {
+                if (restartBtn) {
+                    restartBtn = false;
+                    restart()
+                }
+            });
+        });
+    </script>
+</body>
+</html>
