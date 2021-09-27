@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>MyGithubPage</title>
+    <script src="lib/jquery.min.js"></script>
     <style>
         @font-face {
             font-family: 'Gotham Rounded';
@@ -85,7 +86,9 @@
         <a href="/tictactoe"><h2>TicTacToe</h2></a>
     </center>
     <script>
-        document.querySelector('.icon-container').setAttribute('style','')
+        $('document').ready(function(){
+            $('.icon-container').removeAttr('style');
+        });
     </script>
 </body>
 </html>
