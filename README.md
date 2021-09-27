@@ -1,3 +1,4 @@
+<h1>My Github Page</h1><hr>
 <h1>Snake-Game</h1>
 <h2>mobile friendly</h2>
 <h4>use Arrow keys (wasd) in pc.<br>swipe in mobile.</h4>
