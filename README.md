@@ -6,8 +6,7 @@
 <h4>I used svg tag to create graphics.</h4>
 <a href="https://shihadumar.github.io/snake">play online</a>
 <h3>jquery</h3><hr>
-<details>
-<h1>TicTacToe</h1>
+<details><summary><h1>TicTacToe</h1></summary>
 <h2>mobile friendly</h2>
 <a href="https://shihadumar.github.io/tictactoe">play online</a>
 <h3>jquery</h3><hr>
