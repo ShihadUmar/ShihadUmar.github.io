@@ -1,4 +1,4 @@
-<a href="https://shihadumar.github.io">My Github Page</a>
+<a href="https://shihadumar.github.io"><h1>My Github Page</h1></a>
 <h1>My Github Projects</h1><hr>
 <details><summary>SnakeGame</summary>
 <h2>mobile friendly</h2>
