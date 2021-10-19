@@ -91,6 +91,8 @@
     </svg>
     <script>
         /*
+            Snake Game (Javascript).
+
             *this is a version of my svg snake game (https://shihadumar.github.io/snake).
             
             updates:
@@ -102,7 +104,7 @@
         */
 
         ////////////////////////
-        // ???:
+        // ---:
         NodeList.prototype.forEach = NodeList.prototype.forEach || Array.prototype.forEach;
 
         ////////////////////////
@@ -288,7 +290,6 @@
             // body.click
             document.querySelector('body').addEventListener('click', function(){
                 if(isStarted){
-                    isStarted = false;
                     display('.text-m',0,1000);           
                     setTimeout(() => {
                         display('#pause',1,1000);           
@@ -296,8 +297,11 @@
                         document.querySelector('#text-2').innerHTML = 'Click to Restart.';
                         document.querySelector('#text-1').setAttribute('x','14');
                         document.querySelector('#text-2').setAttribute('x','10.5');
-                        main();                        
+                        main();                       
                     }, 1000);
+                    setTimeout(() => {
+                        isStarted = false;
+                    }, 2000);
                 }else if(___stop__) {
                     display('#pause',1,1000);           
                     ___stop__ = false;
@@ -305,7 +309,7 @@
                     main();
                 }
             });
-
+            
             ////////////////////////
             // pause_: 
             function pause_() {
