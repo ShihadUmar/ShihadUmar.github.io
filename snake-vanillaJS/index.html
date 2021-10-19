@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake</title>
+    <style>
+        :root {
+            --color-1: #216aaf;
+            --color-2: #646d7c;
+            --color-3: #9e3535;
+            --color-4: #9da0a8;
+            --color-5: #313b49;
+        }
+        html, body {
+            height: 100%;
+            width: 100%;
+            overscroll-behavior: contain;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        body {
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--color-5);
+        }
+        #game {
+            position: relative;
+            width: 100vw;
+            height: 75vw;
+        }
+        @media (min-aspect-ratio: 4/3) {
+            #game {
+                height: 100%;
+                width: 133.333333333vh;
+            }
+        }
+        #snake {
+            stroke-linejoin: round;
+            stroke-linecap: round;
+            fill: none;
+            stroke: var(--color-1);
+            stroke-width: 0.8;
+        }
+        .text-s {
+            fill: var(--color-2);
+            font-size: 1.5px;
+        }
+        .text-m {
+            fill: var(--color-3);
+            font-size: 4px;
+        }
+        .color-4 {
+            fill: var(--color-4);
+        }
+        .color-2 {
+            fill: var(--color-2);
+        }
+        .color-3, #food {
+            fill: var(--color-3);
+        }
+    </style>
+</head>
+<body>
+    <svg id="game" viewBox="-0.1 -0.1 48.1 36.1" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <text x="1" y="2" class="text-s">Score:&nbsp;&nbsp;<tspan id="score">0</tspan></text>
+        <text x="22" y="2" class="text-s">HighScore:&nbsp;&nbsp;<tspan id="high-score">0</tspan></text>
+        <rect class="color-2" x="0" y="3" width="48" height="33"/>
+        <rect class="color-4" x="1" y="4" width="46" height="31"/>
+        <polyline class="all" id="snake" points="23.5 19.5 22.5 19.5 21.5 19.5 20.5 19.5" style="display: none;"/>
+        <circle class="all" id="food" r="0.5" cx="27.5" cy="19.5" style="display: none;"/>
+        <text id="text-1" class="text-m" x="18" y="18.5">Snake.</text>
+        <text id="text-2" class="text-m" x="12.5"  y="22">Click to Start.</text>
+        <g id="play-pause">            
+            <g id="pause" style="display: none;">
+                <polygon class="color-3" points="44.5 0.5 45.3 0.5 45.3 2.5 44.5 2.5"/>
+                <polygon class="color-3" points="45.8 0.5 46.6 0.5 46.6 2.5 45.8 2.5"/>
+            </g>
+            <polygon id="play" class="color-3" points="44.7 0.5 44.7 2.5 46.5 1.5" style="display: none;"/>
+            <rect id="play-pause-btn" x="44" y="0" width="3" height="3" fill-opacity="0"/>
+        </g>
+    </svg>
+    <script>
+        /*
+            *this is a version of my svg snake game (https://shihadumar.github.io/snake).
+            
+            updates:
+            > only vanilla.js (no jquery).
+            > using window.localStorage (no cookies).
+            > new colors.
+            > size 16kb.
+            > ...
+        */
+
+        ////////////////////////
+        // ???:
+        NodeList.prototype.forEach = NodeList.prototype.forEach || Array.prototype.forEach;
+
+        ////////////////////////
+        // $(document).ready():
+        document.addEventListener("DOMContentLoaded",function(){
+            display('#game > *, #play-pause > *');
+
+            ////////////////////////
+            // Create (Global) Variables:
+            const snake = document.querySelector('#snake');
+            const idFood = document.querySelector('#food');
+            let direction, pointsVar, mainLoop, xDown, yDown, score, __key_, ___stop__;
+            let isStarted = true;
+            let pause = false;
+            let __pause_ = true;
+
+            ////////////////////////
+            // Set HighScore:
+            if (localStorage.getItem('_highScoreSnakeGame_')!==null) {
+                document.querySelector('#high-score').innerHTML = atob(localStorage.getItem('_highScoreSnakeGame_'));
+            } else {
+                localStorage.setItem('_highScoreSnakeGame_',btoa(0));
+            }
+
+            ////////////////////////
+            // main:
+            function main(){
+                score = 0;
+                pause = false;
+                direction = 'right';
+                __key_ = true;
+                document.querySelector('#score').innerHTML = score;
+                pointsVar = '23.5 19.5 22.5 19.5 21.5 19.5 20.5 19.5';
+                snake.setAttribute('points', pointsVar);
+                idFood.setAttribute('cx','27.5');
+                idFood.setAttribute('cy','19.5');
+                display('.all',1,1000);
+                setTimeout(() => {
+                    mainLoop = setInterval(() => {
+                        if(!pause){
+                            moveSnake();
+                        }
+                    }, 100);
+                }, 500);
+            }
+
+            ////////////////////////
+            // food:
+            function food(){
+                let points = pointsVar.split(' ');
+                let foodX = Math.floor(Math.random() * (46 - 1 + 1) + 1) + 0.5;
+                let foodY = Math.floor(Math.random() * (34 - 4 + 1) + 4) + 0.5;
+                if(points.length > 2400){
+                    snake.setAttribute('points','23.5 19.5 22.5 19.5 21.5 19.5 20.5 19.5');
+                    points = snake.getAttribute('points').split(' ');
+                }
+                for(let index = 1; index < points.length / 2; index++) {
+                    if(foodX == points[index * 2 - 2] && foodY == points[index * 2 - 1]){
+                        food();
+                        return;
+                    }
+                }
+                idFood.setAttribute('cx',foodX);
+                idFood.setAttribute('cy',foodY);
+            }
+
+            ////////////////////////
+            // moveSnake:
+            function moveSnake(){
+                let foodX = idFood.getAttribute('cx');
+                let foodY = idFood.getAttribute('cy');
+                let points = pointsVar.split(' ');
+                let __stop_ = false;
+                __key_ = false;
+                __pause_ = false;
+                let touchingTail, pointsLength, xPos, yPos, pointsOut, pointsPlus;
+                if (direction == 'up') {
+                    xPos = points[0];
+                    yPos = Number(points[1]) - 1;
+                } else if (direction == 'down') {
+                    xPos = points[0];
+                    yPos = Number(points[1]) + 1;
+                } else if (direction == 'right') {
+                    xPos = Number(points[0]) + 1;
+                    yPos = points[1];
+                } else if(direction == 'left') {
+                    xPos = Number(points[0]) - 1;
+                    yPos = points[1];
+                }
+                if (xPos == Number(foodX) && yPos == Number(foodY)) {
+                    score++;
+                    document.querySelector('#score').innerHTML = score;
+                    food();
+                    pointsLength = points.length / 2 + 1;
+                } else {
+                    pointsLength = points.length / 2;
+                }
+                touchingTail = isTouchingTail(xPos, yPos);
+                if (xPos < 1.5 || xPos > 46.5 || yPos < 4.5 || yPos > 34.5 || touchingTail) {
+                    clearInterval(mainLoop);
+                    __stop_ = true;
+                    if(direction == 'up'){
+                        yPos += 0.4;
+                    }else if(direction == 'down'){
+                        yPos -= 0.4;
+                    }else if(direction == 'right'){
+                        xPos -= 0.4;
+                    }else if(direction == 'left'){
+                        xPos += 0.4;
+                    }   
+                }
+                pointsOut = `${xPos} ${yPos}`
+                for(let index = 1; index < pointsLength; index++) {
+                    pointsOut += ` ${points[index * 2 - 2]} ${points[index * 2 - 1]}`                    
+                }
+                pointsVar = pointsOut;
+                snake.setAttribute('points',pointsVar);
+                if(__stop_){
+                    setTimeout(() => {
+                        if(score > Number(atob(localStorage.getItem('_highScoreSnakeGame_')))){
+                            localStorage.setItem('_highScoreSnakeGame_',btoa(score));
+                        }
+                        document.querySelector('#high-score').innerHTML = atob(localStorage.getItem('_highScoreSnakeGame_'));
+                        ___stop__ = true;
+                        document.querySelector('#text-1').innerHTML = 'Game Over.';
+                        document.querySelector('#text-2').innerHTML = 'Click to Restart.';
+                        document.querySelector('#text-1').setAttribute('x','14');
+                        document.querySelector('#text-2').setAttribute('x','10.5');
+                        display('.all, #pause, #play',0,1000);
+                        display('.text-m',1,1000);           
+                    }, 200);
+                }else{
+                    __key_ = true;
+                    __pause_ = true;
+                }
+            }
+
+            ////////////////////////
+            // isTouchingTail:
+            function isTouchingTail(xPos, yPos){
+                let points = snake.getAttribute('points').split(' ');
+                for(let index = 1; index < points.length / 2; index++) {
+                    if(xPos == points[index * 2 - 2] && yPos == points[index * 2 - 1]){
+                        return(true);
+                    }
+                }
+                return(false);
+            }
+            
+            ////////////////////////
+            // key Event Listners:
+            document.addEventListener('keydown', function(){
+                if(__key_){
+                    __key_ = false;
+                    if(event.key == 'ArrowUp' || event.key == 'w'){
+                        if(direction != 'down'){
+                            direction = 'up';
+                        }
+                    }else if(event.key == 'ArrowDown' || event.key == 's'){
+                        if(direction != 'up'){
+                            direction = 'down';
+                        }
+                    }else if(event.key == 'ArrowRight' || event.key == 'd'){
+                        if(direction != 'left'){
+                            direction = 'right';
+                        }
+                    }else if(event.key == 'ArrowLeft' || event.key == 'a'){
+                        if(direction != 'right'){
+                            direction = 'left';
+                        }
+                    }
+                }
+                if(event.key == 'p' || event.key == ' '){
+                    pause_();
+                }
+            });
+
+            ////////////////////////
+            // #play-pause-btn:
+            document.querySelector('#play-pause-btn').addEventListener('click', pause_);
+
+            ////////////////////////
+            // body.click
+            document.querySelector('body').addEventListener('click', function(){
+                if(isStarted){
+                    isStarted = false;
+                    display('.text-m',0,1000);           
+                    setTimeout(() => {
+                        display('#pause',1,1000);           
+                        document.querySelector('#text-1').innerHTML = 'Game Over.';
+                        document.querySelector('#text-2').innerHTML = 'Click to Restart.';
+                        document.querySelector('#text-1').setAttribute('x','14');
+                        document.querySelector('#text-2').setAttribute('x','10.5');
+                        main();                        
+                    }, 1000);
+                }else if(___stop__) {
+                    display('#pause',1,1000);           
+                    ___stop__ = false;
+                    display('.text-m',0,1000);
+                    main();
+                }
+            });
+
+            ////////////////////////
+            // pause_: 
+            function pause_() {
+                if(__pause_ && !___stop__ && !isStarted){
+                    __pause_ = false;
+                    if(pause){     
+                        display('.text-m, #play',0,1000);
+                        display('#pause, .all',1,1000);
+                        setTimeout(() => {
+                            document.querySelector('#text-1').innerHTML = 'Game Over.';
+                            document.querySelector('#text-2').innerHTML = 'Click to Restart.';
+                            document.querySelector('#text-1').setAttribute('x','14');
+                            document.querySelector('#text-2').setAttribute('x','10.5');
+                            pause = false;
+                            __pause_ = true;                          
+                        }, 1000);
+                    }else{
+                        display('#play, .text-m',1,1000);
+                        display('#pause, .all',0,1000);
+                        document.querySelector('#text-1').innerHTML = 'Game Paused.';
+                        document.querySelector('#text-2').innerHTML = 'Click play Continue.';
+                        document.querySelector('#text-1').setAttribute('x','13');
+                        document.querySelector('#text-2').setAttribute('x','9');
+                        setTimeout(() => {
+                            __pause_ = true;
+                        }, 1000);
+                        pause = true;
+                    }
+                }
+            }
+
+            ////////////////////////
+            // Swipe Event Listners:
+            document.addEventListener('touchstart', function(evt) {
+                const firstTouch = evt.touches[0];                                      
+                xDown = firstTouch.clientX;                               
+                yDown = firstTouch.clientY;                  
+            }, false);                                                
+            document.addEventListener('touchmove', function handleTouchMove(evt) {
+                if (!xDown||!yDown||!__key_) {
+                    return;
+                }
+                let xUp = evt.touches[0].clientX;                                    
+                let yUp = evt.touches[0].clientY;
+                let xDiff = xDown - xUp;
+                let yDiff = yDown - yUp;
+                if ( Math.abs( xDiff ) > Math.abs( yDiff ) ) {
+                    if ( xDiff > 0 ) {
+                        if(direction != 'right'){
+                            direction = 'left';
+                        }
+                    } else {
+                        if(direction != 'left'){
+                            direction = 'right';
+                        }                   }                       
+                } else {
+                    if ( yDiff > 0 ) {
+                        if(direction != 'down'){
+                            direction = 'up';
+                        }
+                    } else { 
+                        if(direction != 'up'){
+                            direction = 'down';
+                        }
+                    }                                                                 
+                }
+                console.log(direction)
+                xDown = null;
+                yDown = null;                                            
+            }, false);
+
+            ////////////////////////
+            // Show|Hide Element:
+            function display(element,display_,milliseconds) {
+                if (milliseconds!==undefined && display_!==undefined) {
+                    document.querySelectorAll(element).forEach((elm)=>elm.setAttribute('style',`opacity: ${display_?1:0}; visibility: ${display_?'visible':'hidden'}; -webkit-transition: visibility ${milliseconds}ms linear, opacity ${milliseconds}ms linear; -moz-transition: visibility ${milliseconds}ms linear, opacity ${milliseconds}ms linear; -o-transition: visibility ${milliseconds}ms linear, opacity ${milliseconds}ms linear;`));
+                } else {
+                    document.querySelectorAll(element).forEach((elm)=>elm.setAttribute('style',`opacity: ${elm.style.display=='none'?0:1}; visibility: ${elm.style.display=='none'?'hidden':'visible'};`));
+                }
+            }
+        }, false);
+    </script>
+</body>
+</html>
